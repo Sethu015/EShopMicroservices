@@ -1,4 +1,6 @@
 using Catalog.API;
+using Catalog.API.Products.DeleteProduct;
+using Catalog.API.Products.UpdateProduct;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,8 +15,13 @@ builder.Services.AddMediatR(config =>
     config.RegisterServicesFromAssembly(typeof(Program).Assembly);
 });
 
+//Add Fluent Validation
+builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
+
 //Mapster Config
 TypeAdapterConfig.GlobalSettings.Default.NameMatchingStrategy(NameMatchingStrategy.IgnoreCase);
+TypeAdapterConfig.GlobalSettings.NewConfig<UpdateProductsResult, UpdateProductResponse>().Map(dest => dest.isSuccess, src => src.isSuccess);
+TypeAdapterConfig.GlobalSettings.NewConfig<DeleteProductResult, DeleteProductResponse>().Map(dest => dest.isSuccess, src => src.isSuccess);
 
 //Marten Register
 builder.Services.AddMarten(options =>
