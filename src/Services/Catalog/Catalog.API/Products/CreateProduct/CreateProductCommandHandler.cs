@@ -16,18 +16,12 @@
         }
     }
 
-    public class CreateProductCommandHandler (IDocumentSession session,IValidator<CreateProductCommand> validator)
+    public class CreateProductCommandHandler (IDocumentSession session,ILogger<CreateProductCommandHandler> logger)
         : ICommandHandler<CreateProductCommand, CreateProductResult>
     {
         public async Task<CreateProductResult> Handle(CreateProductCommand command, CancellationToken cancellationToken)
         {
-
-            var result = await validator.ValidateAsync(command);
-            var errors = result.Errors.Select(x => x.ErrorMessage).ToList();
-            if (errors.Any())
-            {
-                throw new ValidationException(errors.FirstOrDefault());
-            }
+            logger.LogInformation("Executing CreateProductCommandHandler.Handle method with comman {0}", command);
 
             //Create Product Entity from command
             //save in database
