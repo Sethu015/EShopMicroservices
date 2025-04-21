@@ -16,13 +16,11 @@
         }
     }
 
-    public class CreateProductCommandHandler (IDocumentSession session,ILogger<CreateProductCommandHandler> logger)
+    public class CreateProductCommandHandler (IDocumentSession session)
         : ICommandHandler<CreateProductCommand, CreateProductResult>
     {
         public async Task<CreateProductResult> Handle(CreateProductCommand command, CancellationToken cancellationToken)
         {
-            logger.LogInformation("Executing CreateProductCommandHandler.Handle method with comman {0}", command);
-
             //Create Product Entity from command
             //save in database
             //return cancellationproductresult

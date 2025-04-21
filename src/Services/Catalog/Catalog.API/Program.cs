@@ -1,9 +1,6 @@
-using BuildingBlocks.Behaviors;
 using Catalog.API;
 using Catalog.API.Products.DeleteProduct;
 using Catalog.API.Products.UpdateProduct;
-using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +15,7 @@ builder.Services.AddMediatR(config =>
 {
     config.RegisterServicesFromAssembly(assembly);
     config.AddOpenBehavior(typeof(ValidationBehavior<,>));
+    config.AddOpenBehavior(typeof(LoggingBehavior<,>));
 });
 
 //Add Fluent Validation
@@ -34,11 +32,16 @@ builder.Services.AddMarten(options =>
     options.Connection(builder.Configuration.GetConnectionString("Database")!);
 }).UseLightweightSessions();
 
+//Add Exception handler
+builder.Services.AddExceptionHandler<CustomExceptionHandler>();
+
 var app = builder.Build();
 
 //Configure Http Request Pipeline
 
 app.MapCarter();
+
+app.UseExceptionHandler(options => { });
 
 //Custom Exception - Commented as we use global exception handling
 //app.UseExceptionHandler(handler =>
