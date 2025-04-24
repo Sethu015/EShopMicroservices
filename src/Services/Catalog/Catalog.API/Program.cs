@@ -1,6 +1,8 @@
 using Catalog.API;
 using Catalog.API.Products.DeleteProduct;
 using Catalog.API.Products.UpdateProduct;
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,8 +34,16 @@ builder.Services.AddMarten(options =>
     options.Connection(builder.Configuration.GetConnectionString("Database")!);
 }).UseLightweightSessions();
 
+if (builder.Environment.IsDevelopment())
+    builder.Services.InitializeMartenWith<CatalogInitialData>();
+
 //Add Exception handler
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
+
+//Add health checks
+
+builder.Services.AddHealthChecks()
+    .AddNpgSql(builder.Configuration.GetConnectionString("Database")!);
 
 var app = builder.Build();
 
@@ -42,6 +52,12 @@ var app = builder.Build();
 app.MapCarter();
 
 app.UseExceptionHandler(options => { });
+
+app.UseHealthChecks("/health",
+    new HealthCheckOptions
+    {
+        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+    });
 
 //Custom Exception - Commented as we use global exception handling
 //app.UseExceptionHandler(handler =>
