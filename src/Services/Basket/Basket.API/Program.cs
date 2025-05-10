@@ -25,6 +25,13 @@ builder.Services.AddValidatorsFromAssembly(assembly);
 TypeAdapterConfig.GlobalSettings.Default.NameMatchingStrategy(NameMatchingStrategy.IgnoreCase);
 TypeAdapterConfig.GlobalSettings.NewConfig<DeleteBasketResult, DeleteBasketResponse>().Map(dest => dest.isSuccess, src => src.isSuccess);
 
+//Marten
+builder.Services.AddMarten(opts =>
+{
+    opts.Connection(builder.Configuration.GetConnectionString("Database")!);
+    opts.Schema.For<ShoppingCart>().Identity(x => x.UserName);
+}).UseLightweightSessions();
+
 
 var app = builder.Build();
 
