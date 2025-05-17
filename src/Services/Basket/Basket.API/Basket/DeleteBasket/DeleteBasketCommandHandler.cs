@@ -1,4 +1,6 @@
 ﻿
+using Basket.API.Data;
+
 namespace Basket.API.Basket.DeleteBasket
 {
     public record DeleteBasketCommand(string userName) : ICommand<DeleteBasketResult>;
@@ -12,14 +14,14 @@ namespace Basket.API.Basket.DeleteBasket
         }
     }
 
-    public class DeleteBasketCommandHandler : ICommandHandler<DeleteBasketCommand, DeleteBasketResult>
+    public class DeleteBasketCommandHandler(IBasketRepository _repository) : ICommandHandler<DeleteBasketCommand, DeleteBasketResult>
     {
         public async Task<DeleteBasketResult> Handle(DeleteBasketCommand command, CancellationToken cancellationToken)
         {
             //ToDo: Delete basket from DB and cache based on Username
-            //session.Delete<Basket>(command.userName)
+            var result = await _repository.DeleteBasket(command.userName);
 
-            return new DeleteBasketResult(true);
+            return new DeleteBasketResult(result);
         }
     }
 }
