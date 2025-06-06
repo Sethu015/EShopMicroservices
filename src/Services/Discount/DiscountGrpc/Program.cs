@@ -1,5 +1,6 @@
 using DiscountGrpc.Data;
 using DiscountGrpc.Services;
+using Mapster;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +14,8 @@ builder.Services.AddDbContext<DiscountContext>(opts =>
 {
     opts.UseSqlite(builder.Configuration.GetConnectionString("Database"));
 });
+
+TypeAdapterConfig.GlobalSettings.Default.NameMatchingStrategy(NameMatchingStrategy.IgnoreCase);
 
 var app = builder.Build();
 
