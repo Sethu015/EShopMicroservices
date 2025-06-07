@@ -34,14 +34,32 @@ namespace DiscountGrpc.Services
             return response;
         }
 
-        public override Task<CouponModel> UpdateDiscount(UpdateDiscountRequest request, ServerCallContext context)
+        public override async Task<CouponModel> UpdateDiscount(UpdateDiscountRequest request, ServerCallContext context)
         {
-            return base.UpdateDiscount(request, context);
+            if(request is null || request.Coupon is null)
+                throw new RpcException(new Status(StatusCode.InvalidArgument,"Invalid request object"));
+            var existingCoupon = discountContext.Coupones.FirstOrDefault(x => x.Id == request.Coupon.Id);
+            if (existingCoupon is null)
+                throw new Exception($"Coupon Not found for Product {request.Coupon.ProductName}");
+            existingCoupon.Amount = request.Coupon.Amount;
+            existingCoupon.ProductName = request.Coupon.ProductName;
+            existingCoupon.Description = request.Coupon.Description;
+            var result = discountContext.Update(existingCoupon);
+            await discountContext.SaveChangesAsync();
+            var response = existingCoupon.Adapt<CouponModel>();
+            return response;
         }
 
-        public override Task<DeleteDiscountResponse> DeleteDiscount(DeleteDiscountRequest request, ServerCallContext context)
+        public override async Task<DeleteDiscountResponse> DeleteDiscount(DeleteDiscountRequest request, ServerCallContext context)
         {
-            return base.DeleteDiscount(request, context);
+            if (request is null || request.ProductName is null)
+                throw new RpcException(new Status(StatusCode.InvalidArgument, "Invalid request object"));
+            var existingCoupon = discountContext.Coupones.FirstOrDefault(x => x.ProductName.Equals(request.ProductName));
+            if (existingCoupon is null)
+                throw new Exception($"Coupon Not found for Product {request.ProductName}");
+            discountContext.Remove(existingCoupon);
+            await discountContext.SaveChangesAsync();
+            return new DeleteDiscountResponse() { Success = true };
         }
     }
 }
