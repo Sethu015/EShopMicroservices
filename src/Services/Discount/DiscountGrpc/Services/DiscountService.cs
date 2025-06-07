@@ -56,7 +56,7 @@ namespace DiscountGrpc.Services
                 throw new RpcException(new Status(StatusCode.InvalidArgument, "Invalid request object"));
             var existingCoupon = discountContext.Coupones.FirstOrDefault(x => x.ProductName.Equals(request.ProductName));
             if (existingCoupon is null)
-                throw new Exception($"Coupon Not found for Product {request.ProductName}");
+                throw new RpcException(new Status(StatusCode.NotFound, $"Discount with Product Name {request.ProductName} Not found"));
             discountContext.Remove(existingCoupon);
             await discountContext.SaveChangesAsync();
             return new DeleteDiscountResponse() { Success = true };
