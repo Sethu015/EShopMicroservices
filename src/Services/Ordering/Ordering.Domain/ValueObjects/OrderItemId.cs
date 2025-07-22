@@ -2,6 +2,16 @@
 {
     public record OrderItemId
     {
-        public Guid Value {  get; set; }
+        public Guid Value {  get; }
+        private OrderItemId(Guid value) => Value = value;
+        public static OrderItemId Of(Guid value)
+        {
+            ArgumentNullException.ThrowIfNull(value);
+            if (value.Equals(Guid.Empty))
+            {
+                throw new DomainException("OrderItemId cannot be empty");
+            }
+            return new OrderItemId(value);
+        }
     }
 }
