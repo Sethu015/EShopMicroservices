@@ -43,12 +43,12 @@
             AddDomainEvent(new OrderUpdatedEvent(this));
         }
 
-        public void Add(ProductId productId,int quantity,decimal totalPrice)
+        public void Add(ProductId productId,int quantity,decimal price)
         {
             ArgumentOutOfRangeException.ThrowIfZero(quantity);
-            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(totalPrice);
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(price);
 
-            var orderItem = new OrderItem(Id, productId, quantity, totalPrice);
+            var orderItem = new OrderItem(Id, productId, quantity, price);
             _orderItems.Add(orderItem);
         }
 
