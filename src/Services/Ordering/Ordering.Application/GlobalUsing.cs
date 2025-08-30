@@ -3,3 +3,7 @@ global using Ordering.Application.Data;
 global using Ordering.Application.Dtos;
 global using Ordering.Domain.Models;
 global using Ordering.Domain.ValueObjects;
+global using MediatR;
+global using Ordering.Domain.DomainEvents;
+global using Microsoft.Extensions.Logging;
+global using Microsoft.EntityFrameworkCore;
