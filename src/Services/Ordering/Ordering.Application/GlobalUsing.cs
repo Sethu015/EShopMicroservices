@@ -7,3 +7,5 @@ global using MediatR;
 global using Ordering.Domain.DomainEvents;
 global using Microsoft.Extensions.Logging;
 global using Microsoft.EntityFrameworkCore;
+global using Ordering.Application.Exception;
+global using Ordering.Application.Extensions;
