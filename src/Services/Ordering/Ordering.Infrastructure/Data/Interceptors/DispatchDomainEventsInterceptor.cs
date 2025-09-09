@@ -29,9 +29,11 @@ namespace Ordering.Infrastructure.Data.Interceptors
 
             var domainEvents = aggregates.SelectMany(a => a.DomainEvents).ToList();
 
-            foreach (var aggregate in aggregates)
+            aggregates.ToList().ForEach(a => a.ClearDomainEvents());
+
+            foreach (var domainEvent in domainEvents)
             {
-                await mediator.Publish(aggregate.DomainEvents);
+                await mediator.Publish(domainEvent);
             }
         }
     }

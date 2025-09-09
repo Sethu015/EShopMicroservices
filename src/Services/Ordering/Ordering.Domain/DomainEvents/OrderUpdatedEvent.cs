@@ -1,6 +1,4 @@
 ﻿namespace Ordering.Domain.DomainEvents
 {
-    public record OrderUpdatedEvent (Order order) : IDomainEvent
-    {
-    }
+    public record OrderUpdatedEvent (Order order) : IDomainEvent;
 }

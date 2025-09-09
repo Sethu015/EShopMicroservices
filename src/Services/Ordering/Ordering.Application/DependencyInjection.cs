@@ -1,4 +1,5 @@
 ﻿using BuildingBlocks.Behaviors;
+using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
@@ -15,6 +16,9 @@ namespace Ordering.Application
                 cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
 
             });
+
+            services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+
             return services;
         }
     }
